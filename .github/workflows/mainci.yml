@@ -1,0 +1,23 @@
+name: Main CI
+on: [push]
+
+jobs:
+    build:
+        runs-on: ubuntu-18.04
+        name: Build and test
+        steps:
+            - uses: actions/checkout@master
+            - name: Setup dotnet
+              uses: actions/setup-dotnet@v1
+              with:
+                  dotnet-version: 3.0.100
+            - name: Build server solution
+              run: dotnet build server/SWCardGame.sln
+            - name: Run server unit tests
+              run: dotnet test server/SWCardGame.sln
+            - name: Setup node
+              uses: actions/setup-node@v1
+              with:
+                  node-version: '10.x'
+            - name: Build and test client app
+              run: cd react-client/&&yarn install&&CI=true yarn test&&cd ..
